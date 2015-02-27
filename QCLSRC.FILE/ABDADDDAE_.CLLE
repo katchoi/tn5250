@@ -5,7 +5,7 @@
 000500070424             DCL        VAR(&DESC) TYPE(*CHAR) LEN(50)
 000600070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)
 000700070831             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(512)
-000800070424
+000800150227/* this is test comment */
 000900070506             CALLPRC    PRC('isDAGExist') PARM(&DAG) +
 001000070506                          RTNVAL(%BIN(&RC))
 001100070506             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(NOTEXIST))
