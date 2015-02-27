@@ -1,0 +1,42 @@
+000100070816             PGM        PARM(&DAG &DAE &FIL &TYPE)                              
+000200070816             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+000300070816             DCL        VAR(&DAE)  TYPE(*CHAR) LEN(256)                         
+000400070816             DCL        VAR(&FIL)  TYPE(*CHAR) LEN(256)                         
+000500070816             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000600070818                                                                                
+000700070818             DCL        VAR(&FILID)  TYPE(*CHAR) LEN(10)                        
+000800070818             DCL        VAR(&OWNER)  TYPE(*CHAR) LEN(10)                        
+000900070818             DCL        VAR(&RC)     TYPE(*CHAR) LEN(4)                         
+001000070819             DCL        VAR(&MSG)    TYPE(*CHAR) LEN(1024)                      
+001100070818             DCL        VAR(&TAG)    TYPE(*CHAR) LEN(540)                       
+001200070818             DCL        VAR(&VAL)    TYPE(*CHAR) LEN(540)                       
+001300070818             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+001400070816                                                                                
+001500070821                                                                                
+001600070821             IF         COND(&TYPE *EQ '*OWNER ') THEN(DO)                      
+001700070818             CHGVAR     VAR(&OWNER) VALUE(%SST(&FIL 1 10))                      
+001800070818             RTVUSRPRF  USRPRF(&OWNER) RTNUSRPRF(&MSG)                          
+001900070819             MONMSG     MSGID(CPF2204) EXEC(SNDPGMMSG MSGID(ABD3103) +          
+002000070818                          MSGF(ABDMFMSG))                                       
+002100070821             ENDDO                                                              
+002200070818                                                                                
+002300070818 ADD:        CALLPRC    PRC('addFilter') PARM(&DAG &DAE &FIL &TYPE) +           
+002400070818                          RTNVAL(%BIN(&RC))                                     
+002500070818             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO CMDLBL(ADDERR))         
+002600070818                                                                                
+002700070818                                                                                
+002800070818             CHGVAR     VAR(&TAG) VALUE('ABSDISK_ADDED_FIL' || &NULL)           
+002900070818             CHGVAR     VAR(&VAL) VALUE(&DAG || &TYPE || &FIL || +              
+003000070818                          &DAE || &NULL)                                        
+003100070818             CALLPRC    PRC('putEnvVar') PARM(&TAG &VAL)                        
+003200070816             GOTO       CMDLBL(ENDPGM)                                          
+003300070818                                                                                
+003400070818/*--------------------- E R R O R  P R O C E S S ------------------*/           
+003500070818                                                                                
+003600070818 ADDERR:                                                                        
+003700070818             SNDPGMMSG  MSG('Error occurs when adding filter. Please +          
+003800070818                          refer to job log for detail') +                       
+003900070818                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+004000070818             GOTO       CMDLBL(ENDPGM)                                          
+004100070818                                                                                
+004200070818 ENDPGM:     ENDPGM                                                             

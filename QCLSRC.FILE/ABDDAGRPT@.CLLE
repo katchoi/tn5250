@@ -1,0 +1,24 @@
+000100070802             PGM        PARM(&CMD &ACTION &RTN)                                 
+000200070503             DCL        VAR(&CMD) TYPE(*CHAR) LEN(20)                           
+000300070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000400070503             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000500070503             DCL        VAR(&RTN) TYPE(*CHAR) LEN(5700)                         
+000600070801                                                                                
+000700070801             DCL        VAR(&LTS) TYPE(*CHAR) LEN(26)                           
+000800070802             DCL        VAR(&VAR) TYPE(*CHAR) LEN(18) +                         
+000900070802                          VALUE('ABSDISK_REPORT_DAG')                           
+001000070503             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001100070802             DCL        VAR(&LEN) TYPE(*DEC) LEN(5 0) VALUE(59)                 
+001200070503             DCL        VAR(&BLEN) TYPE(*CHAR) LEN(2)                           
+001300070503                                                                                
+001400070802             CALLPRC    PRC('rtvEnvVar') PARM(&VAR &DAG)                        
+001500070809             CALLPRC    PRC('getCurAnalysisRunTime') PARM(&DAG +                
+001600070801                          &LTS) RTNVAL(%BIN(&RC))                               
+001700070503             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO +                       
+001800070503                          CMDLBL(SQLERR))                                       
+001900070503             CHGVAR     VAR(%BIN(&BLEN)) VALUE(&LEN)                            
+002000070802             CHGVAR     VAR(&RTN) VALUE(&BLEN *TCAT '?*DAG(''' *TCAT +          
+002100070802                          &DAG *TCAT ''')' *TCAT ' ?*STS(''' *TCAT +            
+002200070802                          &LTS *TCAT ''')')                                     
+002300070503SQLERR:                                                                         
+002400070503ENDPGM:      ENDPGM                                                             

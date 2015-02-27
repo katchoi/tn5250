@@ -1,0 +1,55 @@
+000100070823             PGM        PARM(&DAG &RUNTS &SUB &OBJ &LIB &TYPE &FILNAM)          
+000200070529             DCL        VAR(&DAG)    TYPE(*CHAR) LEN(20)                        
+000300070529             DCL        VAR(&RUNTS)  TYPE(*CHAR) LEN(26)                        
+000400070823             DCL        VAR(&SUB)    TYPE(*CHAR) LEN(20)                        
+000500070529             DCL        VAR(&OBJ)    TYPE(*CHAR) LEN(10)                        
+000600070529             DCL        VAR(&LIB)    TYPE(*CHAR) LEN(10)                        
+000700070529             DCL        VAR(&TYPE)   TYPE(*CHAR) LEN(7)                         
+000800070813             DCL        VAR(&FILNAM) TYPE(*CHAR) LEN(10)                        
+000900070525                                                                                
+001000070525             DCL        VAR(&CRTDATE) TYPE(*CHAR) LEN(13)                       
+001100070525             DCL        VAR(&CHGDATE) TYPE(*CHAR) LEN(13)                       
+001200070525             DCL        VAR(&USEDATE) TYPE(*CHAR) LEN(13)                       
+001300070529             DCL        VAR(&SIZE)    TYPE(*DEC)  LEN(15 0)                     
+001400080511             DCL        VAR(&ASIZE)   TYPE(*CHAR) LEN(15)                       
+001500080511             DCL        VAR(&PSIZE)   TYPE(*CHAR) LEN(16)                       
+001600070529             DCL        VAR(&OWNER)   TYPE(*CHAR) LEN(10)                       
+001700070525             DCL        VAR(&CRTTS)   TYPE(*CHAR) LEN(26)                       
+001800070525             DCL        VAR(&CHGTS)   TYPE(*CHAR) LEN(26)                       
+001900070525             DCL        VAR(&USETS)   TYPE(*CHAR) LEN(26)                       
+002000070902             DCL        VAR(&NAME)    TYPE(*CHAR) LEN(256)                      
+002100080511             DCL        VAR(&OBJASP)  TYPE(*DEC)  LEN(2 0)                      
+002200080511             DCL        VAR(&AOBJASP) TYPE(*CHAR)  LEN(2)                       
+002300080511             DCL        VAR(&POBJASP) TYPE(*CHAR)  LEN(3)                       
+002400080511             DCL        VAR(&OVFASP)  TYPE(*CHAR) LEN(1)                        
+002500070525             DCL        VAR(&RC)      TYPE(*CHAR) LEN(4)                        
+002600070529             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+002700050403                                                                                
+002800080511             RTVOBJD    OBJ(&LIB/&OBJ) OBJTYPE(&TYPE) OWNER(&OWNER) +           
+002900080511                          ASP(&OBJASP) OVFASP(&OVFASP) +                        
+003000080511                          CRTDATE(&CRTDATE) CHGDATE(&CHGDATE) +                 
+003100080511                          USEDATE(&USEDATE) SIZE(&SIZE)                         
+003200070823             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ENDPGM))                
+003300070902             CHGVAR     VAR(&NAME) VALUE(&OBJ)                                  
+003400080610             CHGVAR     VAR(&AOBJASP) VALUE(&OBJASP)                            
+003500080610             CHGVAR     VAR(&POBJASP) VALUE(&AOBJASP *TCAT &NULL)               
+003600070902             IF         COND(&FILNAM *EQ '          ') THEN(GOTO +              
+003700070902                          CMDLBL(ADDRCD))                                       
+003800070902             CALLPRC    PRC('checkStandardFilter') PARM(&NAME &TYPE +           
+003900080610                        &OWNER &POBJASP &FILNAM) RTNVAL(%BIN(&RC))              
+004000070902             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO +                       
+004100070902                          CMDLBL(NOTQUAL))                                      
+004200070902 ADDRCD:     CALLPRC    PRC('cvtToSQLTimestamp') PARM(&CRTDATE &CRTTS)          
+004300070525             CALLPRC    PRC('cvtToSQLTimestamp') PARM(&CHGDATE &CHGTS)          
+004400070525             CALLPRC    PRC('cvtToSQLTimestamp') PARM(&USEDATE &USETS)          
+004500070525                                                                                
+004600070529             CHGVAR     VAR(&ASIZE) VALUE(&SIZE)                                
+004700080511             CHGVAR     VAR(&PSIZE) VALUE(&ASIZE *TCAT &NULL)                   
+004800080511                                                                                
+004900080511                                                                                
+005000080511             CALLPRC    PRC('addAnalysisObjRecord') PARM(&DAG &RUNTS +          
+005100080511                          &SUB &OBJ &LIB &TYPE &PSIZE &CRTTS &CHGTS +           
+005200080511                          &USETS &OWNER &FILNAM &POBJASP &OVFASP) +             
+005300080511                          RTNVAL(&RC)                                           
+005400070902 NOTQUAL:                                                                       
+005500070823 ENDPGM:     ENDPGM                                                             

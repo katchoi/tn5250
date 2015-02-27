@@ -1,0 +1,11 @@
+000100070605             PGM        PARM(&DAG)                                              
+000200070605             DCL        VAR(&DAG)   TYPE(*CHAR) LEN(20)                         
+000300070605                                                                                
+000400070801             ADDENVVAR  ENVVAR('ABSDISK_REPORT_DAG') VALUE(&DAG)                
+000500070801             MONMSG     MSGID(CPFA980) EXEC(GOTO CMDLBL(CHANGE))                
+000600070801 GO:         GO         MENU(ABDDAGRPT)                                         
+000700070801             GOTO       CMDLBL(ENDPGM)                                          
+000800070801                                                                                
+000900070801 CHANGE:     CHGENVVAR  ENVVAR('ABSDISK_REPORT_DAG') VALUE(&DAG)                
+001000070801             GOTO       CMDLBL(GO)                                              
+001100070801 ENDPGM:     ENDPGM                                                             

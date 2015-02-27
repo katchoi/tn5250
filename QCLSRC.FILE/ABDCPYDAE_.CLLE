@@ -1,0 +1,40 @@
+000100070904             PGM        PARM(&FRMDAG &FRMDAE &FRMDESC &TYPE &TODAG +            
+000200070904                          &TODAE &TODESC)                                       
+000300070503             DCL        VAR(&FRMDAG)  TYPE(*CHAR) LEN(20)                       
+000400070617             DCL        VAR(&FRMDAE)  TYPE(*CHAR) LEN(256)                      
+000500070904             DCL        VAR(&FRMDESC) TYPE(*CHAR) LEN(50)                       
+000600070503             DCL        VAR(&TODAG)   TYPE(*CHAR) LEN(20)                       
+000700070617             DCL        VAR(&TODAE)   TYPE(*CHAR) LEN(256)                      
+000800070617             DCL        VAR(&TYPE)    TYPE(*CHAR) LEN(7)                        
+000900070904             DCL        VAR(&TODESC)  TYPE(*CHAR) LEN(50)                       
+001000070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001100070904             DCL        VAR(&MSG) TYPE(*CHAR) LEN(400)                          
+001200070424                                                                                
+001300070904             IF         COND(&TODAG *EQ '*FROMDAG') THEN(CHGVAR +               
+001400070904                          VAR(&TODAG) VALUE(&FRMDAG))                           
+001500070904             IF         COND(&TODAE *EQ '*FROMDAE') THEN(CHGVAR +               
+001600070904                          VAR(&TODAE) VALUE(&FRMDAE))                           
+001700070904             IF         COND(&TODESC *EQ '*SAME') THEN(CHGVAR +                 
+001800070904                          VAR(&TODESC) VALUE(&FRMDESC))                         
+001900070617             CALLPRC    PRC('isDAEExist') PARM(&FRMDAG &FRMDAE &TYPE) +         
+002000070617                          RTNVAL(%BIN(&RC))                                     
+002100070617             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(NOTEXIST))       
+002200070503                                                                                
+002300070617             CALLPRC    PRC('isDAEExist') PARM(&TODAG &TODAE &TYPE) +           
+002400070617                          RTNVAL(%BIN(&RC))                                     
+002500070503             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO CMDLBL(EXIST))          
+002600070424             GOTO       CMDLBL(ENDPGM)                                          
+002700070503NOTEXIST:                                                                       
+002800070904             CHGVAR     VAR(&MSG) VALUE('0000' || &FRMDAE || &TYPE +            
+002900070904                          || &FRMDAG)                                           
+003000070825             SNDPGMMSG  MSGID(ABD2002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+003100070503                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+003200070503             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+003300070503             GOTO       CMDLBL(ENDPGM)                                          
+003400070424EXIST:                                                                          
+003500070904             CHGVAR     VAR(&MSG) VALUE('0000' || &TODAE || &TYPE || +          
+003600070904                          &TODAG)                                               
+003700070825             SNDPGMMSG  MSGID(ABD2001) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+003800070425                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+003900070425             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+004000070424ENDPGM:      ENDPGM                                                             

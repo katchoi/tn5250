@@ -1,0 +1,38 @@
+000100070516             PGM        PARM(&DAG &DAE &TYPE &DESC)                             
+000200070424             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+000300070516             DCL        VAR(&DAE)  TYPE(*CHAR) LEN(256)                         
+000400070516             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000500070424             DCL        VAR(&DESC) TYPE(*CHAR) LEN(50)                          
+000600070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000700070424             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000800070424                                                                                
+000900070424             CALLPRC    PRC('isDAGExist') PARM(&DAG) RTNVAL(%BIN(&RC))          
+001000070503             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO +                       
+001100070503                          CMDLBL(NOTEXIST))                                     
+001200070516             CALLPRC    PRC('isDAEExist') PARM(&DAG &DAE &TYPE) +               
+001300070516                          RTNVAL(%BIN(&RC))                                     
+001400070516             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO +                       
+001500070516                          CMDLBL(NOTEXIST))                                     
+001600070904                                                                                
+001700070904             IF         COND(&TYPE *EQ '*DAG') THEN(GOTO +                      
+001800070904                          CMDLBL(ENDPGM))                                       
+001900070904             IF         COND(&TYPE *EQ '*STMF') THEN(GOTO +                     
+002000070904                          CMDLBL(ENDPGM))                                       
+002100070904             IF         COND(&TYPE *EQ '*DIR') THEN(GOTO +                      
+002200070904                          CMDLBL(ENDPGM))                                       
+002300070904             RTVOBJD    OBJ(TEST) OBJTYPE(&TYPE)                                
+002400070904             MONMSG     MSGID(CPD0084) EXEC(GOTO CMDLBL(INVTYPE))               
+002500070904             MONMSG     MSGID(CPD0000)                                          
+002600070904                                                                                
+002700070424             GOTO       CMDLBL(ENDPGM)                                          
+002800070503NOTEXIST:                                                                       
+002900070424             CHGVAR     VAR(&MSG) VALUE(('0000' || &DAG))                       
+003000070825             SNDPGMMSG  MSGID(ABD1002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+003100070425                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+003200070425             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+003300070904INVTYPE:                                                                        
+003400070904             CHGVAR     VAR(&MSG) VALUE(('0000' || &TYPE))                      
+003500070904             SNDPGMMSG  MSGID(ABD2004) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+003600070904                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+003700070904             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+003800070424ENDPGM:      ENDPGM                                                             

@@ -1,0 +1,11 @@
+000100080622             PGM        PARM(&RPT &DESC &PARM)                                  
+000200080622             DCL        VAR(&RPT)  TYPE(*CHAR) LEN(10)                          
+000300080622             DCL        VAR(&DESC) TYPE(*CHAR) LEN(50)                          
+000400080622             DCL        VAR(&PARM) TYPE(*CHAR) LEN(256)                         
+000500080622             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000600070424                                                                                
+000700080622                                                                                
+000800080622             CALLPRC    PRC('updateReport') PARM(&RPT &DESC &PARM) +            
+000900080622                          RTNVAL(%BIN(&RC))                                     
+001000070424             GOTO       CMDLBL(ENDPGM)                                          
+001100070424ENDPGM:      ENDPGM                                                             

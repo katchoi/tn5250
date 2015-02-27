@@ -1,0 +1,19 @@
+000100070809             PGM        PARM(&ACTION &DAG &STS &SIZE &OUTPUT)                   
+000200070809             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000300070809             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000400070809             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000500070809             DCL        VAR(&SIZE) TYPE(*DEC) LEN(10)                           
+000600070809             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+000700070809                                                                                
+000800070809                                                                                
+000900070809             DCL        VAR(&ASIZE) TYPE(*CHAR) LEN(10)                         
+001000070809                                                                                
+001100080510             IF         COND(&STS *EQ '*LAST') THEN(CALLPRC +                   
+001200080510                          PRC('getLastAnalysisRunTime') PARM(&DAG +             
+001300080510                          &STS))                                                
+001400080510                                                                                
+001500070809             CHGVAR     VAR(&ASIZE) VALUE(&SIZE)                                
+001600070810             STRQMQRY   QMQRY(ABDISZRPT) OUTPUT(&OUTPUT) SETVAR((DAG +          
+001700070809                          ('''' || &DAG || '''')) (STS ('''' || +               
+001800070809                          &STS || '''')) (SIZE &ASIZE))                         
+001900070809ENDPGM:      ENDPGM                                                             

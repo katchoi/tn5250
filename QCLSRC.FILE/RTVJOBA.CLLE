@@ -1,0 +1,7 @@
+000100080625             PGM        PARM(&JOB &USR &NBR)                                    
+000200080625             DCL        VAR(&JOB) TYPE(*CHAR) LEN(10)                           
+000300080625             DCL        VAR(&USR) TYPE(*CHAR) LEN(10)                           
+000400080625             DCL        VAR(&NBR) TYPE(*CHAR) LEN(6)                            
+000500080625                                                                                
+000600080625             RTVJOBA    JOB(&JOB) USER(&USR) NBR(&NBR)                          
+000700080625             ENDPGM                                                             

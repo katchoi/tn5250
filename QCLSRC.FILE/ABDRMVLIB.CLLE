@@ -1,0 +1,16 @@
+000100070826             PGM        PARM(&CURLIB &ACTION)                                   
+000200070825             DCL        VAR(&CURLIB) TYPE(*CHAR) LEN(10)                        
+000300070826             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(1)                         
+000400070825                                                                                
+000500070827             MONMSG     MSGID(CPF0000)                                          
+000600070826             IF         COND(&ACTION *EQ 'R') THEN(DO)                          
+000700070825             RTVJOBA    CURLIB(&CURLIB)                                         
+000800070825             CHGCURLIB  CURLIB(*CRTDFT)                                         
+000900070826             GOTO       CMDLBL(ENDPGM)                                          
+001000070826             ENDDO                                                              
+001100070826                                                                                
+001200070906             IF         COND(&CURLIB *EQ '*NONE') THEN(GOTO +                   
+001300070906                          CMDLBL(ENDPGM))                                       
+001400070826             CHGCURLIB  CURLIB(&CURLIB)                                         
+001500070826ENDPGM:      ENDPGM                                                             
+001600070825                                                                                

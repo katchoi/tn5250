@@ -1,0 +1,25 @@
+000100070425             PGM        PARM(&DAG)                                              
+000200070424             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+000300070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000400070424             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000500070424                                                                                
+000600070424             CALLPRC    PRC('isDAGExist') PARM(&DAG) RTNVAL(%BIN(&RC))          
+000700070425             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO +                       
+000800070425                          CMDLBL(NOTEXIST))                                     
+000900070824                                                                                
+001000080204             CALLPRC    PRC('isAnalysisRan') PARM(&DAG) +                       
+001100070824                          RTNVAL(%BIN(&RC))                                     
+001200070824             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO +                       
+001300070824                          CMDLBL(SUMEXIST))                                     
+001400070424             GOTO       CMDLBL(ENDPGM)                                          
+001500070425NOTEXIST:                                                                       
+001600070424             CHGVAR     VAR(&MSG) VALUE(('0000' || &DAG))                       
+001700070824             SNDPGMMSG  MSGID(ABD1002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+001800070424                          MSGTYPE(*DIAG)                                        
+001900070424             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+002000070824SUMEXIST:                                                                       
+002100070824             CHGVAR     VAR(&MSG) VALUE(('0000' || &DAG))                       
+002200070824             SNDPGMMSG  MSGID(ABD1003) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+002300070824                          MSGTYPE(*DIAG)                                        
+002400070824             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+002500070424ENDPGM:      ENDPGM                                                             

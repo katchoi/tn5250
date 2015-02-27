@@ -1,0 +1,17 @@
+000100070605             PGM        PARM(&DAG)                                              
+000200070605             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000300070605             DCL        VAR(&RC)  TYPE(*CHAR) LEN(4)                            
+000400070605             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000500070605                                                                                
+000600070605             CALLPRC    PRC('isDAGExist') PARM(&DAG) +                          
+000700070605                          RTNVAL(%BIN(&RC))                                     
+000800070605             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(NOTEXIST))       
+000900070605             GOTO       CMDLBL(ENDPGM)                                          
+001000070605                                                                                
+001100070605NOTEXIST:                                                                       
+001200070605             CHGVAR     VAR(&MSG) VALUE(('0000' || &DAG))                       
+001300070825             SNDPGMMSG  MSGID(ABD1002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+001400070605                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+001500070605             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+001600070605             GOTO       CMDLBL(ENDPGM)                                          
+001700070605ENDPGM:      ENDPGM                                                             

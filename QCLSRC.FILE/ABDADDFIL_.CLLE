@@ -1,0 +1,54 @@
+000100070816             PGM        PARM(&DAG &DAE &FIL &TYPE)                              
+000200070816             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+000300070816             DCL        VAR(&DAE)  TYPE(*CHAR) LEN(256)                         
+000400070816             DCL        VAR(&FIL)  TYPE(*CHAR) LEN(256)                         
+000500070816             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000600070818                                                                                
+000700070818             DCL        VAR(&FILID) TYPE(*CHAR) LEN(10)                         
+000800070818             DCL        VAR(&OWNER) TYPE(*CHAR) LEN(10)                         
+000900070818             DCL        VAR(&RC)    TYPE(*CHAR) LEN(4)                          
+001000070819             DCL        VAR(&MSG)   TYPE(*CHAR) LEN(1024)                       
+001100070819             DCL        VAR(&TEMP)  TYPE(*CHAR) LEN(256)                        
+001200070816                                                                                
+001300070818                                                                                
+001400070818             IF         COND(&TYPE *EQ '*OWNER') THEN(DO)                       
+001500070819             CHGVAR     VAR(&TEMP) VALUE(%SST(&FIL 11 246))                     
+001600070819             IF         COND(&TEMP *NE ' ') THEN(GOTO CMDLBL(LENERR))           
+001700070819                                                                                
+001800070818             CHGVAR     VAR(&OWNER) VALUE(%SST(&FIL 1 10))                      
+001900070818             RTVUSRPRF  USRPRF(&OWNER) RTNUSRPRF(&MSG)                          
+002000070818             MONMSG     MSGID(CPF2217) EXEC(GOTO CMDLBL(AUTERR))                
+002100070818             MONMSG     MSGID(CPF2204)                                          
+002200070818             ENDDO                                                              
+002300070818                                                                                
+002400070818             CALLPRC    PRC('hasFilter') PARM(&DAG &DAE &FILID) +               
+002500070818                          RTNVAL(%BIN(&RC))                                     
+002600070818             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(ENDPGM))         
+002700070818             CALLPRC    PRC('isFilterExist') PARM(&FILID &FIL &TYPE) +          
+002800070818                          RTNVAL(%BIN(&RC))                                     
+002900070818             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO CMDLBL(DUPERR))         
+003000070818             GOTO       CMDLBL(ENDPGM)                                          
+003100070818                                                                                
+003200070818/*--------------------- E R R O R  P R O C E S S ------------------*/           
+003300070818 AUTERR:     CHGVAR     VAR(&MSG) VALUE('0000' || &DAG || &DAE || +             
+003400070818                          &OWNER)                                               
+003500070818             SNDPGMMSG  MSGID(ABD3001) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+003600070818                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+003700070818             GOTO       CMDLBL(ERROR)                                           
+003800070818                                                                                
+003900070818 DUPERR:     CHGVAR     VAR(&MSG) VALUE('0000' || &DAG || &DAE || +             
+004000070818                          &FIL || &TYPE)                                        
+004100070818             SNDPGMMSG  MSGID(ABD3002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+004200070818                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+004300070818             GOTO       CMDLBL(ERROR)                                           
+004400070819                                                                                
+004500070819 LENERR:     CHGVAR     VAR(&MSG) VALUE('0000' || &DAG || &DAE || +             
+004600070819                          &FIL || &TYPE)                                        
+004700070819             SNDPGMMSG  MSGID(ABD3003) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+004800070819                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+004900070819             GOTO       CMDLBL(ERROR)                                           
+005000070818/*-----------------------------------------------------------------*/           
+005100070818                                                                                
+005200070818 ERROR:      SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+005300070818             GOTO       CMDLBL(ENDPGM)                                          
+005400070818 ENDPGM:     ENDPGM                                                             

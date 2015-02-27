@@ -1,0 +1,60 @@
+000100080518             PGM        PARM(&ACTION &DAG &STS &FIELDS &NAME &TYPE +            
+000200080603                          &LIB &OWNER &ASP &NUM &ORDER &OUTPUT)                 
+000300070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000400070802             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000500070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000600080601             DCL        VAR(&FIELDS) TYPE(*CHAR) LEN(82)                        
+000700080518             DCL        VAR(&NAME)   TYPE(*CHAR) LEN(10)                        
+000800080518             DCL        VAR(&TYPE)   TYPE(*CHAR) LEN(7)                         
+000900080518             DCL        VAR(&LIB)    TYPE(*CHAR) LEN(10)                        
+001000080518             DCL        VAR(&OWNER)  TYPE(*CHAR) LEN(10)                        
+001100080519             DCL        VAR(&ASP)    TYPE(*CHAR) LEN(4)                         
+001200080603             DCL        VAR(&NUM)    TYPE(*DEC) LEN(5)                          
+001300080612             DCL        VAR(&ORDER)  TYPE(*CHAR) LEN(42)                        
+001400070802             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+001500080510                                                                                
+001600080601             DCL        VAR(&NWHERE)  TYPE(*CHAR) LEN(128)                      
+001700080601             DCL        VAR(&NFIELD) TYPE(*CHAR) LEN(128)                       
+001800080612             DCL        VAR(&NORDER) TYPE(*CHAR) LEN(128)                       
+001900080615             DCL        VAR(&ANUM)   TYPE(*CHAR) LEN(5)                         
+002000080615             DCL        VAR(&NNUM)   TYPE(*CHAR) LEN(6)                         
+002100070802             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+002200080613             DCL        VAR(&CQUERY) TYPE(*CHAR) LEN(11) +                      
+002300080613                          VALUE('COBJQUERY')                                    
+002400080615             DCL        VAR(&CHG) TYPE(*CHAR) LEN(1) VALUE('Y')                 
+002500080615             DCL        VAR(&DB) TYPE(*CHAR) LEN(11) +                          
+002600080601                          VALUE('ABDANZOBJ')                                    
+002700080510                                                                                
+002800080510             IF         COND(&STS *EQ '*LAST') THEN(CALLPRC +                   
+002900080510                          PRC('getLastAnalysisRunTime') PARM(&DAG +             
+003000080510                          &STS))                                                
+003100070802                                                                                
+003200080605             CALLPRC    PRC('getObjectSelectedFields') PARM(&FIELDS +           
+003300080605                          &NFIELD)                                              
+003400080518                                                                                
+003500080527             CALLPRC    PRC('getWhere') PARM(&DAG &STS &NAME &TYPE +            
+003600080527                          &LIB &OWNER &ASP &NWHERE)                             
+003700080518                                                                                
+003800080519             CALLPRC    PRC('getOrderByFields') PARM(&ORDER &NORDER)            
+003900080518                                                                                
+004000080613             CHGVAR     VAR(&CQUERY) VALUE(&CQUERY *TCAT &NULL)                 
+004100080601             CHGVAR     VAR(&DB) VALUE(&DB *TCAT &NULL)                         
+004200080615                                                                                
+004300080613             CHGVAR     VAR(&NNUM) VALUE(&NUM)                                  
+004400080613             IF         COND(&NUM *EQ 0) THEN(CHGVAR VAR(&NNUM) +               
+004500080613                          VALUE('65535' *CAT &NULL))                            
+004600080613             ELSE       CMD(CHGVAR VAR(&NNUM) VALUE(&NNUM *TCAT &NULL))         
+004700080615                                                                                
+004800080615             CHGVAR     VAR(&ANUM) VALUE(&NUM)                                  
+004900080615             IF         COND(&NUM *EQ 0) THEN(CHGVAR VAR(&ANUM) +               
+005000080615                                   VALUE('*ALL'))                               
+005100080615                                                                                
+005200080613             CALLPRC    PRC('createCustomQuery') PARM(&CQUERY &DB +             
+005300080613                          &DAG &STS &NFIELD &NWHERE &NORDER &NNUM)              
+005400080613             DLTQMQRY   QMQRY(QTEMP/COBJQUERY)                                  
+005500080603             MONMSG     MSGID(CPF0000)                                          
+005600080613                                                                                
+005700080613             CRTQMQRY   QMQRY(QTEMP/COBJQUERY) SRCFILE(QTEMP/QQMQRYSRC)         
+005800080613             STRQMQRY   QMQRY(QTEMP/COBJQUERY) OUTPUT(&OUTPUT)                  
+005900080615                                                                                
+006000070802ENDPGM:      ENDPGM                                                             

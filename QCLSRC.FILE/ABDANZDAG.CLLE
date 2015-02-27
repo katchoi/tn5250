@@ -1,0 +1,14 @@
+000100070605             PGM        PARM(&DAG)                                              
+000200070605             DCL        VAR(&DAG)   TYPE(*CHAR) LEN(20)                         
+000300070605             DCL        VAR(&RUNTS) TYPE(*CHAR) LEN(26)                         
+000400070605                                                                                
+000500080207/*           CHGLIBL    LIBL(*NONE)    */                                       
+000600070605             CALLPRC    PRC('timestamp') PARM(&RUNTS)                           
+000700070605             CALLPRC    PRC('newAnalysisSummaryRecord') PARM(&DAG +             
+000800070605                          &RUNTS)                                               
+000900070910             CALLPRC    PRC('setAnalysisRunTime') PARM(&DAG &RUNTS)             
+001000070605             CALL       PGM(ABDANZOBJ) PARM(&DAG &RUNTS)                        
+001100070617             CALL       PGM(ABDANZIFS) PARM(&DAG &RUNTS)                        
+001200070730             CALLPRC    PRC('setAnalysisSummaryPct') PARM(&DAG &RUNTS)          
+001300070605                                                                                
+001400070605             ENDPGM                                                             

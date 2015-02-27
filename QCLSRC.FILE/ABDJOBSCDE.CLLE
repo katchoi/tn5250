@@ -1,0 +1,37 @@
+000100070829             PGM        PARM(&DAG &JOB)                                         
+000200070829             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000300070829             DCL        VAR(&JOB) TYPE(*CHAR) LEN(10)                           
+000400070830             DCL        VAR(&TXT) TYPE(*CHAR) LEN(160)                          
+000500070830             DCL        VAR(&TXT1) TYPE(*CHAR) LEN(80)                          
+000600070830             DCL        VAR(&TXT2) TYPE(*CHAR) LEN(80)                          
+000700070830             DCL        VAR(&MSGID) TYPE(*CHAR) LEN(7)                          
+000800070829             DCL        VAR(&ENTRY) TYPE(*CHAR) LEN(6)                          
+000900070830             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001000070907             DCL        VAR(&TAG)  TYPE(*CHAR) LEN(80)                          
+001100070907             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+001200070829                                                                                
+001300080511             RMVENVVAR  ENVVAR(ABSDISK_JOB_ENTRY_NUM)                           
+001400080511             MONMSG     MSGID(CPFA981)                                          
+001500080511                                                                                
+001600070907             ?          ADDJOBSCDE ?*JOB(&JOB) ?*CMD(ABDANZDAG +                
+001700070907                          DAG(&DAG)) ?*JOBD(ABDANZDAG)                          
+001800070829             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ENDPGM))                
+001900070830 AGAIN:      RCVMSG     MSGQ(*PGMQ) MSG(&TXT1) SECLVL(&TXT2) +                  
+002000070830                          MSGID(&MSGID)                                         
+002100070830             IF         COND((&MSGID *NE 'CPC1238') *AND (&MSGID *NE +          
+002200070830                          'CPC1244')) THEN(GOTO CMDLBL(AGAIN))                  
+002300070830             CHGVAR     VAR(&TXT) VALUE(&TXT1 *CAT &TXT2)                       
+002400070830             CALLPRC    PRC('parseScheduledEntryNumber') PARM(&TXT +            
+002500070830                          &ENTRY) RTNVAL(%BIN(&RC))                             
+002600070907             CHGVAR     VAR(&TAG) VALUE('ABSDISK_JOB_ENTRY_NUM' +               
+002700070907                          || &NULL)                                             
+002800070829             CALLPRC    PRC('putEnvVar') +                                      
+002900070907                          PARM(&TAG &ENTRY)                                     
+003000070829             GOTO       CMDLBL(ENDPGM)                                          
+003100070829                                                                                
+003200070829ERROR:                                                                          
+003300070829             CHGVAR     VAR(&TXT) VALUE('Error occurs when +                    
+003400070829                          processing command.')                                 
+003500070829             SNDPGMMSG  MSGID(ABD9999) MSGF(ABDMFMSG) MSGDTA(&TXT) +            
+003600070829                          MSGTYPE(*ESCAPE)                                      
+003700070829 ENDPGM:     ENDPGM                                                             

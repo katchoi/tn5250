@@ -1,0 +1,129 @@
+000100080118             PGM        PARM(&LIB)                                              
+000200080118             DCL        VAR(&LIB) TYPE(*CHAR) LEN(10)                           
+000300080118                                                                                
+000400080118             RMVMSGD    MSGID(ABD2003) MSGF(&LIB/ABDMFMSG)                      
+000500070831             MONMSG     MSGID(CPF0000)                                          
+000600080417             ADDMSGD    MSGID(ABD2003) MSGF(&LIB/ABDMFMSG) +                    
+000700080417                          MSG('Circular error detected. Can not add +           
+000800080417                          DAE &3 type *DAG.') SECLVL('Adding the +              
+000900080417                          new DAE &3 will introduce a circular +                
+001000080417                          relationship error. DAG &2 is found on +              
+001100080417                          &3''s path.') SEV(30) FMT((*CHAR 4) +                 
+001200080417                          (*CHAR 20) (*CHAR 256) (*CHAR 7))                     
+001300080417             RMVMSGD    MSGID(ABD2005) MSGF(&LIB/ABDMFMSG)                      
+001400080417             MONMSG     MSGID(CPF0000)                                          
+001500080417             ADDMSGD    MSGID(ABD2005) MSGF(&LIB/ABDMFMSG) +                    
+001600080417                          MSG('Invalid *LIBGRP value: &3') +                    
+001700080417                          SECLVL('The only valid *LIBGRP are either +           
+001800080417                          #QIBM or #ALLUSER.') SEV(30) FMT((*CHAR +             
+001900080417                          4) (*CHAR 20) (*CHAR 256))                            
+002000070831/*---------------------------------------------------------------*/             
+002100080118             RMVMSGD    MSGID(ABD3001) MSGF(&LIB/ABDMFMSG)                      
+002200070818             MONMSG     MSGID(CPF0000)                                          
+002300080118             ADDMSGD    MSGID(ABD3001) MSGF(&LIB/ABDMFMSG) +                    
+002400070818                          MSG('Not authorized to user profile +                 
+002500070818                          &4.') SECLVL('Adding an unauthorized +                
+002600070818                          owner filter is not allowed.') SEV(30) +              
+002700070818                          FMT((*CHAR 4) (*CHAR 20) (*CHAR 256) +                
+002800070818                          (*CHAR 256) (*CHAR 7))                                
+002900070818                                                                                
+003000080118             RMVMSGD    MSGID(ABD3002) MSGF(&LIB/ABDMFMSG)                      
+003100070818             MONMSG     MSGID(CPF0000)                                          
+003200080118             ADDMSGD    MSGID(ABD3002) MSGF(&LIB/ABDMFMSG) +                    
+003300070819                          MSG('Filter already exists') +                        
+003400070819                          SECLVL('Filter &4 type &5 for DAG &2, DAE +           
+003500070819                          &3 already exist.') SEV(30) FMT((*CHAR 4) +           
+003600070819                          (*CHAR 20) (*CHAR 256) (*CHAR 256) (*CHAR 7))         
+003700070818                                                                                
+003800080118             RMVMSGD    MSGID(ABD3003) MSGF(&LIB/ABDMFMSG)                      
+003900070819             MONMSG     MSGID(CPF0000)                                          
+004000080118             ADDMSGD    MSGID(ABD3003) MSGF(&LIB/ABDMFMSG) +                    
+004100070819                          MSG('Invalid filter format') +                        
+004200070819                          SECLVL('Filter &4 type &5 for DAG &2, DAE +           
+004300070819                          &3 can not longer then 10 bytes') SEV(30) +           
+004400070819                          FMT((*CHAR 4) (*CHAR 20) (*CHAR 256) +                
+004500070819                          (*CHAR 256) (*CHAR 7))                                
+004600070819                                                                                
+004700080118             RMVMSGD    MSGID(ABD3004) MSGF(&LIB/ABDMFMSG)                      
+004800070819             MONMSG     MSGID(CPF0000)                                          
+004900080118             ADDMSGD    MSGID(ABD3004) MSGF(&LIB/ABDMFMSG) +                    
+005000070819                          MSG('Filter does not exist') +                        
+005100070819                          SECLVL('Filter &4 type &5 for DAG &2, DAE +           
+005200070819                          &3 does not exist.') SEV(30) FMT((*CHAR +             
+005300070819                          4) (*CHAR 20) (*CHAR 256) (*CHAR 256) +               
+005400070819                          (*CHAR 7))                                            
+005500080118                                                                                
+005600080118             RMVMSGD    MSGID(ABD4001) MSGF(&LIB/ABDMFMSG)                      
+005700080118             MONMSG     MSGID(CPF0000)                                          
+005800080118             ADDMSGD    MSGID(ABD4001) MSGF(&LIB/ABDMFMSG) +                    
+005900080118                          MSG('No previous run to compare with.') +             
+006000080118                          SECLVL('There is no previous analysis +               
+006100080118                          history found to be used for the change +             
+006200080118                          report.') SEV(30)                                     
+006300070819                                                                                
+006400070819/*---------------------------------------------------------------*/             
+006500080118             RMVMSGD    MSGID(ABD3103) MSGF(&LIB/ABDMFMSG)                      
+006600070818             MONMSG     MSGID(CPF0000)                                          
+006700080118             ADDMSGD    MSGID(ABD3103) MSGF(&LIB/ABDMFMSG) +                    
+006800070818                          MSG('Warning: owner user profile does +               
+006900070818                          not exist') SEV(00)                                   
+007000070818                                                                                
+007100080527/*---------------------------------------------------------------*/             
+007200080527             RMVMSGD    MSGID(ABD5101) MSGF(&LIB/ABDMFMSG)                      
+007300080527             MONMSG     MSGID(CPF0000)                                          
+007400080527             ADDMSGD    MSGID(ABD5101) MSGF(&LIB/ABDMFMSG) +                    
+007500080527                          MSG('Error: invalid select fields +                   
+007600080617                          entered') SECLVL('Either *ALL is +                    
+007700080617                          entered with other fields or duplicated +             
+007800080617                          fields are entered. PLease correct the +              
+007900080527                          field and try again.') SEV(30)                        
+008000080527                                                                                
+008100080527             RMVMSGD    MSGID(ABD5102) MSGF(&LIB/ABDMFMSG)                      
+008200080527             MONMSG     MSGID(CPF0000)                                          
+008300080527             ADDMSGD    MSGID(ABD5102) MSGF(&LIB/ABDMFMSG) +                    
+008400080527                          MSG('Error: invalid order by fields +                 
+008500080617                          entered') SECLVL('Order by fields must +              
+008600080527                          not repeated and must be one of the +                 
+008700080527                          select field. When *ALL is specified, the +           
+008800080527                          valid order by fields are *OBJECT, +                  
+008900080527                          *LIBRARY, *OBJSIZE, *OBJWON, *OBJTYPE, +              
+009000080527                          *OBJASP') SEV(30)                                     
+009100080527                                                                                
+009200080605             RMVMSGD    MSGID(ABD5103) MSGF(&LIB/ABDMFMSG)                      
+009300080605             MONMSG     MSGID(CPF0000)                                          
+009400080605             ADDMSGD    MSGID(ABD5103) MSGF(&LIB/ABDMFMSG) +                    
+009500080605                          MSG('Error: invalid order by fields +                 
+009600080617                          entered') SECLVL('Order by fields must +              
+009700080605                          not repeated and must be one of the +                 
+009800080605                          select field. When *ALL is specified, the +           
+009900080605                          valid order by fields are *IFS, *IFSSIZE, +           
+010000080605                          *IFSWON, *IFSTYPE,') SEV(30)                          
+010100080606                                                                                
+010200080606             RMVMSGD    MSGID(ABD5111) MSGF(&LIB/ABDMFMSG)                      
+010300080606             MONMSG     MSGID(CPF0000)                                          
+010400080606             ADDMSGD    MSGID(ABD5111) MSGF(&LIB/ABDMFMSG) +                    
+010500080617                          MSG('Error: invalid name field entered') +            
+010600080617                          SECLVL('Invalid  name field entered. +                
+010700080617                          Possible entered a invalid *generic* +                
+010800080606                          name. Please chech and re-enter it +                  
+010900080606                          again.') SEV(30)                                      
+011000080605                                                                                
+011100080606             RMVMSGD    MSGID(ABD5113) MSGF(&LIB/ABDMFMSG)                      
+011200080606             MONMSG     MSGID(CPF0000)                                          
+011300080606             ADDMSGD    MSGID(ABD5113) MSGF(&LIB/ABDMFMSG) +                    
+011400080606                          MSG('Error: invalid library field +                   
+011500080617                          entered') SECLVL('Invalid library field +             
+011600080617                          entered. Possible entered a invalid +                 
+011700080606                          *generic* library name. Please chech and +            
+011800080606                          re-enter it again.') SEV(30)                          
+011900080606                                                                                
+012000080606             RMVMSGD    MSGID(ABD5114) MSGF(&LIB/ABDMFMSG)                      
+012100080606             MONMSG     MSGID(CPF0000)                                          
+012200080606             ADDMSGD    MSGID(ABD5114) MSGF(&LIB/ABDMFMSG) +                    
+012300080606                          MSG('Error: invalid owner field +                     
+012400080617                          entered') SECLVL('Invalid owner field +               
+012500080617                          entered. Possible entered a invalid +                 
+012600080606                          *generic* owner name. Please chech and +              
+012700080606                          re-enter it again.') SEV(30)                          
+012800080606                                                                                
+012900070818             ENDPGM                                                             

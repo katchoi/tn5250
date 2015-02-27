@@ -1,0 +1,11 @@
+000100080624             PGM        PARM(&OPT)                                              
+000200080624             DCL        VAR(&OPT)   TYPE(*CHAR) LEN(1)                          
+000300080624             DCL        VAR(&NOPT)  TYPE(*CHAR) LEN(2)                          
+000400080626             DCL        VAR(&NTAG) TYPE(*CHAR) LEN(17) +                        
+000500080626                          VALUE('SAVE_REPORT_FLAG')                             
+000600080624             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+000700070424                                                                                
+000800080624             CHGVAR     VAR(&NOPT) VALUE(&OPT *TCAT &NULL)                      
+000900080626             CHGVAR     VAR(&NTAG) VALUE(&NTAG *TCAT &NULL)                     
+001000080626             CALLPRC    PRC('putEnvVar') PARM(&NTAG &NOPT)                      
+001100070424ENDPGM:      ENDPGM                                                             

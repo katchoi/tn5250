@@ -1,0 +1,76 @@
+000100080518             PGM        PARM(&ACTION &DAG &STS &FIELDS &NAME &TYPE +            
+000200080603                          &LIB &OWNER &ASP &NUM &ORDER &OUTPUT)                 
+000300070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000400070802             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000500070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000600080527             DCL        VAR(&FIELDS) TYPE(*CHAR) LEN(82)                        
+000700080518             DCL        VAR(&NAME)   TYPE(*CHAR) LEN(10)                        
+000800080518             DCL        VAR(&TYPE)   TYPE(*CHAR) LEN(7)                         
+000900080518             DCL        VAR(&LIB)    TYPE(*CHAR) LEN(10)                        
+001000080518             DCL        VAR(&OWNER)  TYPE(*CHAR) LEN(10)                        
+001100080519             DCL        VAR(&ASP)    TYPE(*CHAR) LEN(4)                         
+001200080603             DCL        VAR(&NUM)    TYPE(*DEC)  LEN(4)                         
+001300080527             DCL        VAR(&ORDER)  TYPE(*CHAR) LEN(82)                        
+001400070802             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+001500080510                                                                                
+001600080606             DCL        VAR(&NWHERE)  TYPE(*CHAR) LEN(128)                      
+001700080527             DCL        VAR(&MSG) TYPE(*CHAR) LEN(80)                           
+001800080527             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001900080510                                                                                
+002000070802                                                                                
+002100080519             CALLPRC    PRC('verifyObjectReport') PARM(&FIELDS &NAME +          
+002200080527                          &TYPE &LIB &OWNER &ASP &ORDER) +                      
+002300080527                          RTNVAL(%BIN(&RC))                                     
+002400080527             IF         COND(%BIN(&RC) *GE 1 *AND %BIN(&RC) *LE 10) +           
+002500080527                          THEN(GOTO CMDLBL(FLDERR))                             
+002600080518                                                                                
+002700080527             IF         COND(%BIN(&RC) *GE 61 *AND %BIN(&RC) *LE 70) +          
+002800080527                          THEN(GOTO CMDLBL(ODRERR))                             
+002900080606                                                                                
+003000080606             CALLPRC    PRC('getWhere') PARM(&DAG &STS &NAME &TYPE +            
+003100080606                          &LIB &OWNER &ASP &NWHERE) +                           
+003200080606                          RTNVAL(%BIN(&RC))                                     
+003300080606                                                                                
+003400080606             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO CMDLBL(NAMERR))         
+003500080606             IF         COND(%BIN(&RC) *EQ 2) THEN(GOTO CMDLBL(TYPERR))         
+003600080606             IF         COND(%BIN(&RC) *EQ 3) THEN(GOTO CMDLBL(LIBERR))         
+003700080606             IF         COND(%BIN(&RC) *EQ 4) THEN(GOTO CMDLBL(OWNERR))         
+003800080527             GOTO       CMDLBL(ENDPGM)                                          
+003900080527                                                                                
+004000080527FLDERR:                                                                         
+004100080527             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+004200080527             SNDPGMMSG  MSGID(ABD5101) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+004300080527                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+004400080527             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+004500080527             GOTO       CMDLBL(ENDPGM)                                          
+004600080527ODRERR:                                                                         
+004700080527             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+004800080527             SNDPGMMSG  MSGID(ABD5102) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+004900080527                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+005000080527             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+005100080527             GOTO       CMDLBL(ENDPGM)                                          
+005200080606NAMERR:                                                                         
+005300080606             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+005400080606             SNDPGMMSG  MSGID(ABD5111) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+005500080606                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+005600080606             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+005700080606             GOTO       CMDLBL(ENDPGM)                                          
+005800080606TYPERR:                                                                         
+005900080606             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+006000080606             SNDPGMMSG  MSGID(ABD5112) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+006100080606                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+006200080606             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+006300080606             GOTO       CMDLBL(ENDPGM)                                          
+006400080606LIBERR:                                                                         
+006500080606             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+006600080606             SNDPGMMSG  MSGID(ABD5113) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+006700080606                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+006800080606             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+006900080606             GOTO       CMDLBL(ENDPGM)                                          
+007000080606OWNERR:                                                                         
+007100080606             CHGVAR     VAR(&MSG) VALUE(('0000'))                               
+007200080606             SNDPGMMSG  MSGID(ABD5114) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+007300080606                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+007400080606             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+007500080606             GOTO       CMDLBL(ENDPGM)                                          
+007600070802ENDPGM:      ENDPGM                                                             

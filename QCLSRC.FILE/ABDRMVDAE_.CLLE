@@ -1,0 +1,19 @@
+000100070508             PGM        PARM(&DAG &DAE &TYPE)                                   
+000200070424             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+000300070505             DCL        VAR(&DAE)  TYPE(*CHAR) LEN(256)                         
+000400070505             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000500070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000600070424             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000700070424                                                                                
+000800070506             CALLPRC    PRC('isDAEExist') PARM(&DAG &DAE &TYPE) +               
+000900070506                          RTNVAL(%BIN(&RC))                                     
+001000070508             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(NOTEXIST))       
+001100070424             GOTO       CMDLBL(ENDPGM)                                          
+001200070508NOTEXIST:                                                                       
+001300070506             CHGVAR     VAR(&MSG) VALUE('0000' || &DAE || &TYPE || +            
+001400070506                          &DAG)                                                 
+001500070825             SNDPGMMSG  MSGID(ABD2002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+001600070425                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+001700070425             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+001800070506             GOTO       CMDLBL(ENDPGM)                                          
+001900070424ENDPGM:      ENDPGM                                                             

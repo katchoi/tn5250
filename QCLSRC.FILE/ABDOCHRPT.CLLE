@@ -1,0 +1,52 @@
+000100080512             PGM        PARM(&ACTION &DAG &STS &CMPSTS &OUTPUT)                 
+000200080118             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000300080118             DCL        VAR(&DAG)    TYPE(*CHAR) LEN(20)                        
+000400080118             DCL        VAR(&STS)    TYPE(*CHAR) LEN(26)                        
+000500080512             DCL        VAR(&CMPSTS)    TYPE(*CHAR) LEN(26)                     
+000600080118             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+000700080118             DCL        VAR(&PRVTS) TYPE(*CHAR) LEN(26)                         
+000800080512             DCL        VAR(&FILE1) TYPE(*CHAR) LEN(11) +                       
+000900080512                          VALUE('VIEW1')                                        
+001000080512             DCL        VAR(&FILE2) TYPE(*CHAR) LEN(11) +                       
+001100080512                          VALUE('VIEW2')                                        
+001200080512             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(512)                         
+001300080512             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+001400080118                                                                                
+001500080510             IF         COND(&STS *EQ '*LAST') THEN(CALLPRC +                   
+001600080510                          PRC('getLastAnalysisRunTime') PARM(&DAG +             
+001700080510                          &STS))                                                
+001800080510                                                                                
+001900080512             IF         COND(&CMPSTS *EQ '*PRV') THEN(CALLPRC +                 
+002000080512                          PRC('getCompareAnalysisRunTime') +                    
+002100080512                          PARM(&DAG &STS &CMPSTS))                              
+002200080512             IF         COND(&CMPSTS *EQ +                                      
+002300080118                          '1900-01-01-00.00.00.000000') THEN(GOTO +             
+002400080118                          CMDLBL(NOCOMP))                                       
+002500080512                                                                                
+002600080512             DLTF       FILE(QTEMP/VIEW1)                                       
+002700080512             MONMSG     MSGID(CPF2105)                                          
+002800080512             CHGVAR     VAR(&FILE1) VALUE(&FILE1 *TCAT &NULL)                   
+002900080601             CALLPRC    PRC('createObjView') PARM(&FILE1 &DAG &STS)             
+003000080601             RUNSQLSTM  SRCFILE(QTEMP/QSQLSRC) SRCMBR(VIEW1) +                  
+003100080601                          COMMIT(*NONE)                                         
+003200080512                                                                                
+003300080512             DLTF       FILE(QTEMP/VIEW2)                                       
+003400080512             MONMSG     MSGID(CPF2105)                                          
+003500080512             CHGVAR     VAR(&FILE2) VALUE(&FILE2 *TCAT &NULL)                   
+003600080607             CALLPRC    PRC('createObjView') PARM(&FILE2 &DAG &CMPSTS)          
+003700080607             RUNSQLSTM  SRCFILE(QTEMP/QSQLSRC) SRCMBR(VIEW2) +                  
+003800080607                          COMMIT(*NONE)                                         
+003900080118                                                                                
+004000080118RUNQRY:                                                                         
+004100080512             RUNQRY     QRY(CHGVIEW1) QRYFILE((*SAME))                          
+004200080512             RUNQRY     QRY(CHGVIEW2) QRYFILE((*SAME))                          
+004300080512             RUNQRY     QRY(CHGVIEW3) QRYFILE((*SAME))                          
+004400080119             STRQMQRY   QMQRY(ABDOCHRPT) OUTPUT(&OUTPUT)                        
+004500080118             GOTO       CMDLBL(ENDPGM)                                          
+004600080118NOCOMP:                                                                         
+004700080118             CHGVAR     VAR(&MSG) VALUE(('0000' || &DAG))                       
+004800080118             SNDPGMMSG  MSGID(ABD4001) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+004900080118                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+005000080118             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+005100080118             GOTO       CMDLBL(ENDPGM)                                          
+005200080118ENDPGM:      ENDPGM                                                             
