@@ -1,0 +1,28 @@
+000100070802             PGM        PARM(&ACTION &DAG &STS &LIB &OUTPUT)                    
+000200070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000300070802             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000400070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000500070801             DCL        VAR(&LIB) TYPE(*CHAR) LEN(10)                           
+000600070802             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+000700070731                                                                                
+000800070802             DCL        VAR(&NLIB) TYPE(*CHAR) LEN(11)                          
+000900070802             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+001000070802                                                                                
+001100080510             IF         COND(&STS *EQ '*LAST') THEN(CALLPRC +                   
+001200080510                          PRC('getLastAnalysisRunTime') PARM(&DAG +             
+001300080510                          &STS))                                                
+001400080510                                                                                
+001500070802             IF         COND(&LIB *EQ '*ALL') THEN(DO)                          
+001600070810             STRQMQRY   QMQRY(ABDOLBRPT_) OUTPUT(&OUTPUT) +                     
+001700070802                          SETVAR((DAG ('''' || &DAG || '''')) (STS +            
+001800070802                          ('''' || &STS || '''')))                              
+001900070802             GOTO       CMDLBL(ENDPGM)                                          
+002000070802             ENDDO                                                              
+002100070802             CHGVAR     VAR(&NLIB) VALUE(&LIB *CAT &NULL)                       
+002200070802             CALLPRC    PRC('formatSQLGenericStr') PARM(&NLIB)                  
+002300070802             CHGVAR     VAR(&LIB) VALUE(%SST(&NLIB 1 10))                       
+002400070810             STRQMQRY   QMQRY(ABDOLBRPT) OUTPUT(&OUTPUT) SETVAR((DAG +          
+002500070802                          ('''' || &DAG || '''')) (STS ('''' || +               
+002600070803                          &STS || '''')) (LIB ('''' || &LIB *TCAT +             
+002700070802                          '''')))                                               
+002800070802ENDPGM:      ENDPGM                                                             

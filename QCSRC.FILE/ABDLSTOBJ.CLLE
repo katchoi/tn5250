@@ -1,0 +1,10 @@
+000100070731             PGM        PARM(&DAG &STS)                                         
+000200070731             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000300070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000400070731                                                                                
+000500070731             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000600070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000700070731             STRQMQRY   QMQRY(DSPHSTOBJ) OUTPUT(*) SETVAR((DAG ('''' +          
+000800070731                          || &DAG || '''')) (STS ('''' || &STS || +             
+000900070731                          '''')))                                               
+001000070731             ENDPGM                                                             

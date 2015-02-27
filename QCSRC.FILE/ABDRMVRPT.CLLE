@@ -1,0 +1,16 @@
+000100080622             PGM        PARM(&RPT &DESC)                                        
+000200080625             DCL        VAR(&RPT)  TYPE(*CHAR) LEN(16)                          
+000300080622             DCL        VAR(&DESC) TYPE(*CHAR) LEN(50)                          
+000400080622             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000500080627             DCL        VAR(&NTAG)  TYPE(*CHAR) LEN(20)                         
+000600080627             DCL        VAR(&NRPT)  TYPE(*CHAR) LEN(20)                         
+000700080625             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+000800070424                                                                                
+000900080622             CALLPRC    PRC('removeReport') PARM(&RPT &DESC) +                  
+001000080622                          RTNVAL(%BIN(&RC))                                     
+001100080625             CHGVAR     VAR(&NRPT) VALUE(&RPT *TCAT &NULL)                      
+001200080627             CHGVAR     VAR(&NTAG) VALUE('ABSDISK_DELETED_RPT' *TCAT +          
+001300080627                          &NULL)                                                
+001400080627             CALLPRC    PRC('putEnvVar') PARM(&NTAG &NRPT)                      
+001500070424             GOTO       CMDLBL(ENDPGM)                                          
+001600070424ENDPGM:      ENDPGM                                                             

@@ -1,0 +1,35 @@
+000100070810             PGM        PARM(&DAG &TYPE &SCDSTS)                                
+000200070810                                                                                
+000300070810             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000400070810             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000500070810             DCL        VAR(&SCDSTS) TYPE(*CHAR) LEN(5)                         
+000600070810             DCL        VAR(&LOOP) TYPE(*DEC) LEN(2) VALUE(2)                   
+000700070810             DCL        VAR(&TEMP) TYPE(*CHAR) LEN(20)                          
+000800080511             DCL        VAR(&LIBDTA) TYPE(*CHAR) LEN(10)                        
+000900070810                                                                                
+001000080511             CALLPRC    PRC('getProductLibrary') PARM(&LIBDTA)                  
+001100080511             ADDLIBLE   LIB(&LIBDTA)                                            
+001200080511             MONMSG     MSGID(CPF2103)                                          
+001300080511                                                                                
+001400070810 /* Check DAG name for valid value.  Either *ALL, *PRV, a NAME, or a generic */ 
+001500070810             IF         COND(&DAG *EQ '*ALL                ') +                 
+001600070810                          THEN(GOTO CMDLBL(CONT))                               
+001700070810             IF         COND(&DAG *EQ '*PRV                ') +                 
+001800070810                          THEN(GOTO CMDLBL(CONT))                               
+001900070810                                                                                
+002000070810             IF         COND(%SST(&DAG 1 1) *EQ '*') THEN(CHGVAR +              
+002100070810                          VAR(&TEMP) VALUE('%'))                                
+002200070810             ELSE       CMD(CHGVAR VAR(&TEMP) VALUE(%SST(&DAG 1 1)))            
+002300070810                                                                                
+002400070810 GOLOOP:     IF         COND(&LOOP *GT 20) THEN(GOTO CMDLBL(CONT))              
+002500070810             IF         COND(%SST(&DAG &LOOP 1) *EQ '*') THEN(GOTO +            
+002600070810                          CMDLBL(RPLCAST))                                      
+002700070810             CHGVAR     VAR(&TEMP) VALUE(&TEMP || %SST(&DAG &LOOP 1))           
+002800070810             GOTO       CMDLBL(INCLOOP)                                         
+002900070810 RPLCAST:    CHGVAR     VAR(&TEMP) VALUE(&TEMP || '%')                          
+003000070810 INCLOOP:    CHGVAR     VAR(&LOOP) VALUE(&LOOP + 1)                             
+003100070810             GOTO       CMDLBL(GOLOOP)                                          
+003200070810                                                                                
+003300070810             CHGVAR     VAR(&DAG) VALUE(&TEMP)                                  
+003400070810                                                                                
+003500070810 CONT:       ENDPGM                                                             

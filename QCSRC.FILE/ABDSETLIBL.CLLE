@@ -1,0 +1,9 @@
+000100080511             PGM                                                                
+000200070810                                                                                
+000300080511             DCL        VAR(&LIBDTA) TYPE(*CHAR) LEN(10)                        
+000400070810                                                                                
+000500080511             CALLPRC    PRC('getProductLibrary') PARM(&LIBDTA)                  
+000600080511             ADDLIBLE   LIB(&LIBDTA)                                            
+000700080511             MONMSG     MSGID(CPF2103)                                          
+000800070810                                                                                
+000900080511             ENDPGM                                                             

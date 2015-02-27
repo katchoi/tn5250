@@ -1,0 +1,21 @@
+000100070516             PGM        PARM(&CMD &DAG &DAE &TYPE &RTN)                         
+000200070503             DCL        VAR(&CMD) TYPE(*CHAR) LEN(20)                           
+000300070503             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000400070516             DCL        VAR(&DAE) TYPE(*CHAR) LEN(256)                          
+000500070516             DCL        VAR(&TYPE) TYPE(*CHAR) LEN(7)                           
+000600070516             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000700070503             DCL        VAR(&RTN) TYPE(*CHAR) LEN(5700)                         
+000800070503             DCL        VAR(&VAL) TYPE(*CHAR) LEN(50)                           
+000900070503             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001000070503             DCL        VAR(&LEN) TYPE(*DEC) LEN(5 0) VALUE(58)                 
+001100070503             DCL        VAR(&BLEN) TYPE(*CHAR) LEN(2)                           
+001200070503                                                                                
+001300070516             CALLPRC    PRC('getDAEDesc') PARM(&DAG &DAE &TYPE &VAL) +          
+001400070516                          RTNVAL(%BIN(&RC))                                     
+001500070503             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO +                       
+001600070503                          CMDLBL(SQLERR))                                       
+001700070503             CHGVAR     VAR(%BIN(&BLEN)) VALUE(&LEN)                            
+001800070503             CHGVAR     VAR(&RTN) VALUE(&BLEN *TCAT '??DESC(''' *TCAT +         
+001900070503                          &VAL *TCAT ''')')                                     
+002000070503SQLERR:                                                                         
+002100070503ENDPGM:      ENDPGM                                                             

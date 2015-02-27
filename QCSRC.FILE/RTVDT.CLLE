@@ -1,0 +1,13 @@
+000100070908             PGM        PARM(&DATETIME)                                         
+000200070908             DCL        VAR(&DATETIME) TYPE(*CHAR) LEN(17)                      
+000300070908             DCL        VAR(&DATE) TYPE(*CHAR) LEN(6)                           
+000400070908             DCL        VAR(&TIME) TYPE(*CHAR) LEN(6)                           
+000500070908                                                                                
+000600070908             RTVSYSVAL  SYSVAL(QDATE) RTNVAR(&DATE)                             
+000700070908             RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&TIME)                             
+000800070908             CHGVAR     VAR(&DATETIME) VALUE(%SST(&DATE 1 2) || '/' +           
+000900070908                          || %SST(&DATE 3 2) || '/' || %SST(&DATE 5 +           
+001000070908                          2) || ' ' || %SST(&TIME 1 2) || ':' || +              
+001100070908                          %SST(&TIME 3 2) || ':' || %SST(&TIME 5 2))            
+001200070908                                                                                
+001300070908             ENDPGM                                                             

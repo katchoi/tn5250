@@ -1,0 +1,4 @@
+000100080113             PGM                                                                
+000200080113             ADDLIBLE   LIB(JRCVH) POSITION(*LAST)                              
+000300080113             CALL INITABDDEV                                                    
+000400080113             ENDPGM                                                             

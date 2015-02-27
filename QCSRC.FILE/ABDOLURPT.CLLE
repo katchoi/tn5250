@@ -1,0 +1,23 @@
+000100070803             PGM        PARM(&ACTION &DAG &STS &DATE &OUTPUT)                   
+000200070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000300070803             DCL        VAR(&DAG)    TYPE(*CHAR) LEN(20)                        
+000400070803             DCL        VAR(&STS)    TYPE(*CHAR) LEN(26)                        
+000500070803             DCL        VAR(&DATE)   TYPE(*CHAR) LEN(7)                         
+000600070802             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+000700070803                                                                                
+000800070803             DCL        VAR(&SDATE)  TYPE(*CHAR) LEN(6)                         
+000900070803             DCL        VAR(&FDATE)  TYPE(*CHAR) LEN(8)                         
+001000070731                                                                                
+001100070803                                                                                
+001200080510             IF         COND(&STS *EQ '*LAST') THEN(CALLPRC +                   
+001300080510                          PRC('getLastAnalysisRunTime') PARM(&DAG +             
+001400080510                          &STS))                                                
+001500080510                                                                                
+001600070803             CHGVAR     VAR(&SDATE) VALUE(%SST(&DATE 2 6))                      
+001700070803             CVTDAT     DATE(&SDATE) TOVAR(&FDATE) FROMFMT(*YMD) +              
+001800070803                          TOFMT(*MDY)                                           
+001900070810             STRQMQRY   QMQRY(ABDOLURPT) OUTPUT(&OUTPUT) SETVAR((DAG +          
+002000070803                          ('''' || &DAG || '''')) (STS ('''' || +               
+002100070803                          &STS || '''')) (CRT ('''' || &FDATE || +              
+002200070803                          '''')))                                               
+002300070802ENDPGM:      ENDPGM                                                             

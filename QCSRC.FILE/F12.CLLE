@@ -1,0 +1,7 @@
+000100070430             PGM                                                                
+000200070430             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000300070430             CHGVAR     VAR(&MSG) VALUE(('0000' || 'F12'))                      
+000400070430             SNDPGMMSG  MSGID(CPF6801) MSGF(QCPFMSG) MSGDTA(&MSG) +             
+000500070430                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+000600070430             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+000700070430             ENDPGM                                                             

@@ -1,0 +1,17 @@
+000100080310             PGM        PARM(&MSGID &MSGF &MSG &MSGQ)                           
+000200070425             DCL        VAR(&MSGID) TYPE(*CHAR) LEN(7)                          
+000300070425             DCL        VAR(&MSG)   TYPE(*CHAR) LEN(128)                        
+000400070425             DCL        VAR(&MSGF)  TYPE(*CHAR) LEN(10)                         
+000500080310             DCL        VAR(&MSGQ)  TYPE(*CHAR) LEN(10)                         
+000600070425                                                                                
+000700080311/*           CHGVAR     VAR(&MSG) VALUE(('0000' || &MSG)) */                    
+000800080311             SNDPGMMSG  MSGID(CPF6A03) MSGF(QCPFMSG) TOPGMQ(*SAME +             
+000900080311                          ('processListPanel' LSTPNLPRC LSTPNLPRC)) +           
+001000080311                          MSGTYPE(*STATUS)                                      
+001100080318             SNDPGMMSG  MSGID(&MSGID) MSGF(&MSGF) MSGDTA(&MSG) +                
+001200080318                          TOPGMQ(*SAME ('processListPanel' +                    
+001300080318                          LSTPNLPRC LSTPNLPRC)) MSGTYPE(*INFO)                  
+001400080317             SNDPGMMSG  MSGID(CPF6A03) MSGF(QCPFMSG) TOPGMQ(*SAME +             
+001500080317                          ('processListPanel' LSTPNLPRC LSTPNLPRC)) +           
+001600080317                          MSGTYPE(*STATUS)                                      
+001700070425             ENDPGM                                                             

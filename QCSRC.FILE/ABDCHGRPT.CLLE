@@ -1,0 +1,34 @@
+000100080625             PGM        PARM(&DESC &FIELDS &NAME &TYPE +                        
+000200080628                          &LIB &OWNER &ASP &NUM &ORDER &OUTPUT)                 
+000300080615             DCL        VAR(&FIELDS) TYPE(*CHAR) LEN(82)                        
+000400080615             DCL        VAR(&NAME)   TYPE(*CHAR) LEN(10)                        
+000500080615             DCL        VAR(&TYPE)   TYPE(*CHAR) LEN(7)                         
+000600080615             DCL        VAR(&LIB)    TYPE(*CHAR) LEN(10)                        
+000700080615             DCL        VAR(&OWNER)  TYPE(*CHAR) LEN(10)                        
+000800080615             DCL        VAR(&ASP)    TYPE(*CHAR) LEN(4)                         
+000900080615             DCL        VAR(&NUM)    TYPE(*DEC) LEN(5)                          
+001000080615             DCL        VAR(&ORDER)  TYPE(*CHAR) LEN(42)                        
+001100080615             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+001200080615             DCL        VAR(&OPT)  TYPE(*CHAR) LEN(1)                           
+001300080615             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+001400080622             DCL        VAR(&ANUM)   TYPE(*CHAR) LEN(5)                         
+001500080625             DCL        VAR(&ID)   TYPE(*CHAR) LEN(16)                          
+001600080622             DCL        VAR(&PARM) TYPE(*CHAR) LEN(256)                         
+001700080622             DCL        VAR(&DAG)  TYPE(*CHAR) LEN(20)                          
+001800080622             DCL        VAR(&STS)  TYPE(*CHAR) LEN(26)                          
+001900080622             DCL        VAR(&DESC) TYPE(*CHAR) LEN(50)                          
+002000080625             DCL        VAR(&CMD)  TYPE(*CHAR) LEN(10)                          
+002100080627             DCL        VAR(&TAG)  TYPE(*CHAR) LEN(20)                          
+002200080627             DCL        VAR(&NULL) TYPE(*CHAR) LEN(1) VALUE(X'00')              
+002300070424                                                                                
+002400080622             CHGVAR     VAR(&ANUM) VALUE(&NUM)                                  
+002500080615                                                                                
+002600080622             CALLPRC    PRC('saveReport') PARM(&DAG &STS &FIELDS +              
+002700080622                          &NAME &TYPE &LIB &OWNER &ASP &ANUM &ORDER +           
+002800080622                          &OUTPUT &ID &PARM) RTNVAL(%BIN(&RC))                  
+002900080622             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(ENDPGM))         
+003000080627             CHGVAR     VAR(&TAG) VALUE('UPDATE_REPORT' *TCAT &NULL)            
+003100080627             CALLPRC    PRC('rtvEnvVar') PARM(&TAG &ID)                         
+003200080625             CALLPRC    PRC('updateReport') PARM(&ID &DESC &PARM)               
+003300070424             GOTO       CMDLBL(ENDPGM)                                          
+003400070424ENDPGM:      ENDPGM                                                             

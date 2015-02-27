@@ -1,0 +1,31 @@
+000100080617             PGM        PARM(&ACTION &DAG &STS &FIELDS &NAME &TYPE     +        
+000200080617                          &LIB &OWNER &ASP &NUM &ORDER &OUTPUT)                 
+000300070802             DCL        VAR(&ACTION) TYPE(*CHAR) LEN(6)                         
+000400070802             DCL        VAR(&DAG) TYPE(*CHAR) LEN(20)                           
+000500070731             DCL        VAR(&STS) TYPE(*CHAR) LEN(26)                           
+000600080601             DCL        VAR(&FIELDS) TYPE(*CHAR) LEN(82)                        
+000700080518             DCL        VAR(&NAME)   TYPE(*CHAR) LEN(10)                        
+000800080518             DCL        VAR(&TYPE)   TYPE(*CHAR) LEN(7)                         
+000900080518             DCL        VAR(&LIB)    TYPE(*CHAR) LEN(10)                        
+001000080518             DCL        VAR(&OWNER)  TYPE(*CHAR) LEN(10)                        
+001100080519             DCL        VAR(&ASP)    TYPE(*CHAR) LEN(4)                         
+001200080603             DCL        VAR(&NUM)    TYPE(*DEC) LEN(5)                          
+001300080612             DCL        VAR(&ORDER)  TYPE(*CHAR) LEN(42)                        
+001400070802             DCL        VAR(&OUTPUT) TYPE(*CHAR) LEN(6)                         
+001500080616                                                                                
+001600080510                                                                                
+001700080615             DCL        VAR(&ANUM)   TYPE(*CHAR) LEN(5)                         
+001800080625             DCL        VAR(&CMD) TYPE(*CHAR) LEN(10) +                         
+001900080625                          VALUE('ABDOBJRPT ')                                   
+002000080626             DCL        VAR(&SCMD) TYPE(*CHAR) LEN(10) +                        
+002100080626                          VALUE('ABDSAVRPT ')                                   
+002200080510                                                                                
+002300080615                                                                                
+002400080615             CHGVAR     VAR(&ANUM) VALUE(&NUM)                                  
+002500080615             IF         COND(&NUM *EQ 0) THEN(CHGVAR VAR(&ANUM) +               
+002600080615                                   VALUE('*ALL'))                               
+002700080625                                                                                
+002800080625             CALLPRC    PRC('runReport') PARM(&DAG &STS &FIELDS +               
+002900080625                          &NAME &TYPE &LIB &OWNER &ASP &ANUM &ORDER +           
+003000080626                          &OUTPUT &CMD &SCMD)                                   
+003100070802ENDPGM:      ENDPGM                                                             

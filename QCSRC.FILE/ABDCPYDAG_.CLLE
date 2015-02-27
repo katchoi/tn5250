@@ -1,0 +1,27 @@
+000100070503             PGM        PARM(&FRMDAG &FRMDESC &TODAG &TODESC &CPYDAE)           
+000200070503             DCL        VAR(&FRMDAG)  TYPE(*CHAR) LEN(20)                       
+000300070503             DCL        VAR(&FRMDESC) TYPE(*CHAR) LEN(50)                       
+000400070503             DCL        VAR(&TODAG)   TYPE(*CHAR) LEN(20)                       
+000500070503             DCL        VAR(&TODESC)  TYPE(*CHAR) LEN(50)                       
+000600070503             DCL        VAR(&CPYDAE)  TYPE(*CHAR) LEN(1)                        
+000700070424             DCL        VAR(&RC)   TYPE(*CHAR) LEN(4)                           
+000800070424             DCL        VAR(&MSG)  TYPE(*CHAR) LEN(80)                          
+000900070424                                                                                
+001000070503             CALLPRC    PRC('isDAGExist') PARM(&FRMDAG) RTNVAL(%BIN(&RC))       
+001100070503             IF         COND(%BIN(&RC) *EQ 0) THEN(GOTO CMDLBL(NOTEXIST))       
+001200070503                                                                                
+001300070503             CALLPRC    PRC('isDAGExist') PARM(&TODAG) RTNVAL(%BIN(&RC))        
+001400070503             IF         COND(%BIN(&RC) *EQ 1) THEN(GOTO CMDLBL(EXIST))          
+001500070424             GOTO       CMDLBL(ENDPGM)                                          
+001600070503NOTEXIST:                                                                       
+001700070503             CHGVAR     VAR(&MSG) VALUE(('0000' || &FRMDAG))                    
+001800070825             SNDPGMMSG  MSGID(ABD1002) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+001900070503                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+002000070503             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+002100070503             GOTO       CMDLBL(ENDPGM)                                          
+002200070424EXIST:                                                                          
+002300070503             CHGVAR     VAR(&MSG) VALUE(('0000' || &TODAG))                     
+002400070825             SNDPGMMSG  MSGID(ABD1001) MSGF(ABDMFMSG) MSGDTA(&MSG) +            
+002500070425                          TOPGMQ(*PRV) MSGTYPE(*DIAG)                           
+002600070425             SNDPGMMSG  MSGID(CPF0002) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)           
+002700070424ENDPGM:      ENDPGM                                                             

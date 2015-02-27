@@ -1,0 +1,9 @@
+000100070907             PGM        PARM(&PRDLIB &PRDVER)                                   
+000200070907             DCL        VAR(&PRDINF) TYPE(*CHAR) LEN(20)                        
+000300070907             DCL        VAR(&PRDLIB) TYPE(*CHAR) LEN(10)                        
+000400070907             DCL        VAR(&PRDVER) TYPE(*CHAR) LEN(10)                        
+000500070907                                                                                
+000600070907             RTVDTAARA  DTAARA(ABDPRDINF (1 20)) RTNVAR(&PRDINF)                
+000700070907             CHGVAR     VAR(&PRDLIB) VALUE(%SST(&PRDINF 1 10))                  
+000800070907             CHGVAR     VAR(&PRDVER) VALUE(%SST(&PRDINF 11 10))                 
+000900070907             ENDPGM                                                             

@@ -1,0 +1,5 @@
+000100080116             PGM        PARM(&SYSNAM)                                           
+000200080116             DCL        VAR(&SYSNAM) TYPE(*CHAR) LEN(8)                         
+000300070908                                                                                
+000400080116             RTVNETA    SYSNAME(&SYSNAM)                                        
+000500070908             ENDPGM                                                             
